@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Family Welfare Trust</title>
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0d7a7a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Family Trust">
+<link rel="icon" href="icons/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+
+<style>
+:root{--bg:#f7f4ee;--card:#fff;--ink:#2b2a27;--mute:#7a766d;--brand:#7a3e1d;--brand2:#b5651d;--teal:#0d7a7a;--tealD:#095c5c;--line:#e6e0d3;--ok:#2f6b3a}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:env(safe-area-inset-bottom)}
+header{background:var(--brand);color:#fff;padding:12px 16px;padding-top:calc(12px + env(safe-area-inset-top));display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:5}
+header h1{font-size:16px;margin:0;flex:1;line-height:1.25}
+header button{background:rgba(255,255,255,.18);color:#fff;border:0;border-radius:8px;padding:8px 10px;font-size:13px}
+main{max-width:820px;margin:0 auto;padding:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+.hero{text-align:center}
+.logo{width:110px;height:110px;border-radius:50%;object-fit:cover;border:3px solid var(--brand2);background:#f0e9db;display:block;margin:0 auto 10px}
+.hero h2{margin:6px 0;font-size:19px;letter-spacing:.3px;color:var(--brand)}
+.addr{color:var(--mute);font-size:14px;white-space:pre-line}
+.desc{margin-top:12px;text-align:left;font-size:15px;line-height:1.55;white-space:pre-line}
+h3{margin:0 0 10px;font-size:16px;color:var(--brand)}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.btn{background:var(--brand);color:#fff;border:0;border-radius:9px;padding:10px 14px;font-size:14px;cursor:pointer}
+.btn.alt{background:#efe7d6;color:var(--brand)}
+.btn.danger{background:#fbe9e7;color:#b3261e}
+.btn.sm{padding:6px 10px;font-size:13px}
+.btn.teal{background:var(--teal)}
+.founders{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pcard{background:#fbf8f1;border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center;cursor:pointer}
+.pcard img,.ph{width:84px;height:84px;border-radius:50%;object-fit:cover;background:#e8dfcc;display:block;margin:0 auto 8px}
+.ph{display:flex;align-items:center;justify-content:center;font-size:30px;color:var(--brand2)}
+.pcard .n{font-weight:600;font-size:15px}
+.pcard .s{color:var(--mute);font-size:12px;margin-top:2px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.crumbs{font-size:13px;color:var(--mute);margin-bottom:10px;display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.crumbs a{color:var(--brand);cursor:pointer;text-decoration:underline}
+.dl{display:grid;grid-template-columns:130px 1fr;gap:6px 10px;font-size:14px}
+.dl b{color:var(--mute);font-weight:500}
+.big{width:120px;height:120px;border-radius:50%;object-fit:cover;background:#e8dfcc;display:block;margin:0 auto 10px}
+.dead{border-color:#bdb6a5;filter:grayscale(.35)}
+.tag{display:inline-block;font-size:11px;background:#efe7d6;color:var(--brand);border-radius:20px;padding:2px 8px;margin-top:4px}
+label{display:block;font-size:13px;color:var(--mute);margin:10px 0 3px}
+input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:9px;font-size:15px;background:#fff;font-family:inherit}
+textarea{min-height:90px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:flex-start;justify-content:center;overflow:auto;padding:16px;z-index:10}
+.modal.on{display:flex}
+.sheet{background:#fff;border-radius:14px;padding:16px;width:100%;max-width:520px;margin:auto}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.empty{color:var(--mute);font-size:14px;text-align:center;padding:14px}
+.photoedit{display:flex;align-items:center;gap:12px}
+.photoedit img,.photoedit .ph{margin:0;width:70px;height:70px}
+.note{font-size:12px;color:var(--mute);margin-top:8px}
+.menu-list{display:flex;flex-direction:column;gap:8px}
+.menu-item{display:flex;align-items:center;gap:12px;background:#fbf8f1;border:1px solid var(--line);border-radius:11px;padding:12px;cursor:pointer;text-align:left}
+.menu-item .ic{font-size:22px;width:30px;text-align:center;flex-shrink:0}
+.menu-item .t{font-weight:600;font-size:14.5px}
+.menu-item .d{color:var(--mute);font-size:12.5px;margin-top:1px}
+.listrow{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fbf8f1;border:1px solid var(--line);border-radius:11px;padding:12px 14px;margin-bottom:8px}
+.listrow .main{flex:1;cursor:pointer}
+.listrow .n{font-weight:600;font-size:15px}
+.listrow .s{color:var(--mute);font-size:12.5px;margin-top:2px}
+.iconbtn{background:none;border:0;color:var(--mute);font-size:18px;padding:4px 8px;cursor:pointer}
+.install-card{background:linear-gradient(135deg,var(--teal),var(--tealD));color:#fff;border-radius:12px;padding:16px}
+.install-card h4{margin:0 0 6px;font-size:15px}
+.install-card p{margin:0 0 10px;font-size:13px;opacity:.9;line-height:1.5}
+.install-card .btn{background:#fff;color:var(--tealD);font-weight:600}
+.badge-ok{display:inline-block;background:rgba(255,255,255,.22);border-radius:20px;padding:3px 10px;font-size:12px;margin-bottom:8px}
+</style>
+</head>
+<body>
+<header>
+  <button id="backBtn" style="display:none">← Back</button>
+  <h1 id="hTitle">Family Welfare Trust</h1>
+  <button id="menuBtn">Menu</button>
+</header>
+<main id="app"></main>
+
+<div class="modal" id="modal"><div class="sheet" id="sheet"></div></div>
+
+<script>
+const STARS=["Ashwathi","Bharani","Karthika","Rohini","Makayiram","Thiruvathira","Punartham","Pooyam","Aayilyam","Makam","Pooram","Uthram","Atham","Chithira","Chothi","Visakham","Anizham","Thrikketta","Moolam","Pooradam","Uthradam","Thiruvonam","Avittam","Chathayam","Poororuttathi","Uthrittathi","Revathi"];
+const BLOOD=["A+","A-","B+","B-","AB+","AB-","O+","O-"];
+const RELS=["Son","Daughter","Wife","Husband","Son-in-law","Daughter-in-law","Grandson","Granddaughter","Great-grandson","Great-granddaughter","Other"];
+
+/* ---------- storage (IndexedDB) ---------- */
+let db;
+function openDB(){return new Promise((res,rej)=>{const r=indexedDB.open('trustapp',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>{db=r.result;res()};r.onerror=()=>rej(r.error)})}
+function kvGet(k){return new Promise(res=>{const q=db.transaction('kv').objectStore('kv').get(k);q.onsuccess=()=>res(q.result);q.onerror=()=>res(undefined)})}
+function kvSet(k,v){return new Promise(res=>{const t=db.transaction('kv','readwrite');t.objectStore('kv').put(v,k);t.oncomplete=()=>res()})}
+
+const DEFAULT_TRUST={name:"THANKAM KARUNNAAKARA PILLA FAMILY WELFARE TRUST",address:"",logo:"",description:"",deed:null};
+let trust={...DEFAULT_TRUST};
+let persons=[]; // {id,parent,founder,name,photo,address,blood,dob,relation,star,dod,dstar,mobile,education,job,aadhaar}
+let items=[];   // trust-owned items: {id,name,qty,note}
+let occasions=[]; // {id,name,date,notes,items:[{id,name,qty,note}]}  -- items here = "pooja saadhanangal"
+let committee={president:'',vicePresident:'',secretary:'',jointSecretary:'',treasurer:'',members:[]}; // {id,name,role}
+let view={type:'home',id:null};
+
+async function load(){
+  await openDB();
+  trust={...DEFAULT_TRUST,...(await kvGet('trust')||{})};
+  persons=(await kvGet('persons'))||[];
+  items=(await kvGet('items'))||[];
+  occasions=(await kvGet('occasions'))||[];
+  committee={president:'',vicePresident:'',secretary:'',jointSecretary:'',treasurer:'',members:[],...(await kvGet('committee')||{})};
+  ['F1','F2'].forEach((fid,i)=>{
+    if(!persons.find(p=>p.id===fid)) persons.push(blank({id:fid,founder:true,name:i?'Mr. Karunnaakara Pilla':'Mrs. Thankam',relation:i?'Founder (Grandfather)':'Founder (Grandmother)'}));
+  });
+  render();
+}
+const saveTrust=()=>kvSet('trust',trust);
+const savePersons=()=>kvSet('persons',persons);
+const saveItems=()=>kvSet('items',items);
+const saveOccasions=()=>kvSet('occasions',occasions);
+const saveCommittee=()=>kvSet('committee',committee);
+function blank(o){return Object.assign({id:'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),parent:null,founder:false,name:'',photo:'',address:'',blood:'',dob:'',relation:'',star:'',dod:'',dstar:'',mobile:'',education:'',job:'',aadhaar:''},o)}
+function newId(pfx){return pfx+Date.now().toString(36)+Math.random().toString(36).slice(2,5)}
+
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const byId=id=>persons.find(p=>p.id===id);
+const kids=id=>persons.filter(p=>p.parent===id&&!p.founder);
+const firstName=n=>(n||'').trim().split(/\s+/)[0]||'—';
+function fmtDate(d){if(!d)return'—';const x=new Date(d);return isNaN(x)?d:x.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'})}
+function readImage(file,max=420){return new Promise(res=>{const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{const s=Math.min(1,max/Math.max(im.width,im.height));const c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;c.getContext('2d').drawImage(im,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.82))};im.src=fr.result};fr.readAsDataURL(file)})}
+function readFile(file){return new Promise(res=>{const fr=new FileReader();fr.onload=()=>res({name:file.name,type:file.type,data:fr.result});fr.readAsDataURL(file)})}
+function avatar(p,cls=''){return p.photo?`<img class="${cls}" src="${p.photo}" alt="">`:`<div class="ph ${cls}">${esc((p.name||'?').trim()[0]||'?').toUpperCase()}</div>`}
+function chain(id){const out=[];let p=byId(id);while(p){out.unshift(p);p=p.parent?byId(p.parent):null}return out}
+function allPersons(){return persons}
+function go(type,id=null){view={type,id};render();scrollTo(0,0)}
+
+/* ---------- render ---------- */
+function render(){
+  const app=$('#app');
+  $('#backBtn').style.display=view.type==='home'?'none':'';
+  if(view.type==='home'){$('#hTitle').textContent=trust.name||'Family Welfare Trust';return renderHome(app);}
+  if(view.type==='person')return renderPerson(app);
+  if(view.type==='items'){$('#hTitle').textContent='Trust-owned Items';return renderItems(app);}
+  if(view.type==='occasions'){$('#hTitle').textContent='Occasions & Poojas';return renderOccasions(app);}
+  if(view.type==='occasion')return renderOccasion(app);
+  if(view.type==='committee'){$('#hTitle').textContent='Committee';return renderCommittee(app);}
+}
+
+function renderHome(app){
+  const f1=byId('F1'),f2=byId('F2');
+  const top=persons.filter(p=>!p.founder&&!p.parent);
+  const total=persons.filter(p=>!p.founder).length;
+  app.innerHTML=`
+  <div class="card hero">
+    ${trust.logo?`<img class="logo" src="${trust.logo}" alt="Logo">`:`<div class="ph logo" style="font-size:12px;color:var(--mute)">No logo</div>`}
+    <h2>${esc(trust.name)}</h2>
+    <div class="addr">${trust.address?esc(trust.address):'Address not added yet'}</div>
+    <div class="desc">${trust.description?esc(trust.description):'<span style="color:var(--mute)">Upload the trust deed and add a short description of the trust.</span>'}</div>
+    <div class="row" style="justify-content:center;margin-top:14px">
+      <button class="btn alt sm" onclick="editTrust()">Edit trust details</button>
+      ${trust.deed?`<button class="btn alt sm" onclick="openDeed()">View trust deed</button>`:''}
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Founders</h3>
+    <div class="founders">
+      ${[f1,f2].map(p=>`<div class="pcard ${p.dod?'dead':''}" onclick="go('person','${p.id}')">${avatar(p)}<div class="n">${esc(p.name)}</div><div class="s">${p.founder?(p.relation||''):''}</div></div>`).join('')}
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:10px">
+      <h3 style="margin:0">Trust members — children (${top.length})</h3>
+      <button class="btn sm" onclick="editPerson(null,null)">+ Add son / daughter</button>
+    </div>
+    ${top.length?`<div class="grid">${top.map(cardHTML).join('')}</div>`:'<div class="empty">Add the sons and daughters of Mrs. Thankam and Mr. Karunnaakara Pilla. Open each name to add their family members.</div>'}
+    <div class="note">${total} member${total===1?'':'s'} recorded in total.</div>
+  </div>`;
+}
+
+function cardHTML(p){
+  const n=kids(p.id).length;
+  return `<div class="pcard ${p.dod?'dead':''}" onclick="go('person','${p.id}')">${avatar(p)}<div class="n">${esc(firstName(p.name))}</div><div class="s">${esc(p.relation||'')}${n?` · ${n} family`:''}</div>${p.dod?'<span class="tag">Late</span>':''}</div>`;
+}
+
+function renderPerson(app){
+  const p=byId(view.id); if(!p){go('home');return}
+  const ch=chain(p.id);
+  const crumbs=`<div class="crumbs"><a onclick="go('home')">Home</a>${p.founder?'':ch.map(c=>` › <a onclick="go('person','${c.id}')">${esc(firstName(c.name))}</a>`).join('')}${p.founder?` › <b>${esc(firstName(p.name))}</b>`:''}</div>`;
+  const kk=kids(p.id);
+  app.innerHTML=`${crumbs}
+  <div class="card ${p.dod?'dead':''}">
+    ${p.photo?`<img class="big" src="${p.photo}">`:`<div class="ph big" style="font-size:40px">${esc((p.name||'?').trim()[0]||'?').toUpperCase()}</div>`}
+    <h2 style="text-align:center;margin:0 0 12px;color:var(--brand)">${esc(p.name)||'Unnamed'}${p.dod?' <span class="tag">Late</span>':''}</h2>
+    <div class="dl">
+      <b>Relation</b><span>${esc(p.relation)||'—'}</span>
+      <b>Mobile number</b><span>${esc(p.mobile)||'—'}</span>
+      <b>Date of birth</b><span>${fmtDate(p.dob)}</span>
+      <b>Birth star</b><span>${esc(p.star)||'—'}</span>
+      <b>Blood group</b><span>${esc(p.blood)||'—'}</span>
+      <b>Education</b><span>${esc(p.education)||'—'}</span>
+      <b>Job / occupation</b><span>${esc(p.job)||'—'}</span>
+      <b>Aadhaar number</b><span>${esc(p.aadhaar)||'—'}</span>
+      <b>Address</b><span style="white-space:pre-line">${esc(p.address)||'—'}</span>
+      ${p.dod?`<b>Date of death</b><span>${fmtDate(p.dod)}</span><b>Death star</b><span>${esc(p.dstar)||'—'}</span>`:''}
+    </div>
+    <div class="row" style="margin-top:14px">
+      <button class="btn alt sm" onclick="editPerson('${p.id}')">Edit</button>
+      ${p.founder?'':`<button class="btn danger sm" onclick="delPerson('${p.id}')">Delete</button>`}
+    </div>
+  </div>
+  ${p.founder?'':`<div class="card">
+    <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:10px">
+      <h3 style="margin:0">Family of ${esc(firstName(p.name))} (${kk.length})</h3>
+      <button class="btn sm" onclick="editPerson(null,'${p.id}')">+ Add family member</button>
+    </div>
+    ${kk.length?`<div class="grid">${kk.map(cardHTML).join('')}</div>`:'<div class="empty">No family members added yet — spouse, children, etc. Each of them can have their own family too.</div>'}
+  </div>`}`;
+  $('#hTitle').textContent=firstName(p.name);
+}
+
+/* ---------- Trust-owned Items ---------- */
+function renderItems(app){
+  app.innerHTML=`<div class="crumbs"><a onclick="go('home')">Home</a> › <b>Trust-owned Items</b></div>
+  <div class="card">
+    <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:10px">
+      <h3 style="margin:0">Items owned by the trust (${items.length})</h3>
+      <button class="btn sm" onclick="editItem(null)">+ Add item</button>
+    </div>
+    ${items.length?items.map(it=>`
+      <div class="listrow">
+        <div class="main" onclick="editItem('${it.id}')">
+          <div class="n">${esc(it.name)}</div>
+          <div class="s">${it.qty?esc(it.qty)+' · ':''}${esc(it.note)||''}</div>
+        </div>
+        <button class="iconbtn" onclick="delItem('${it.id}')" title="Delete">✕</button>
+      </div>`).join(''):'<div class="empty">No items added yet — vessels, furniture, land documents, equipment, etc.</div>'}
+    ${items.length?`<div class="row" style="margin-top:12px"><button class="btn teal sm" onclick="printItems()">🖨 Print item list</button></div>`:''}
+  </div>`;
+}
+function editItem(id){
+  const it=id?items.find(x=>x.id===id):{id:newId('it'),name:'',qty:'',note:''};
+  tmp={isNew:!id,it};
+  openModal(`<h3>${id?'Edit':'Add'} trust item</h3>
+  <label>Item name</label><input id="i_name" value="${esc(it.name)}">
+  <label>Quantity / description</label><input id="i_qty" placeholder="e.g. 2 sets, 1 acre, Reg. No. ..." value="${esc(it.qty)}">
+  <label>Notes</label><textarea id="i_note">${esc(it.note)}</textarea>
+  <div class="row" style="margin-top:16px"><button class="btn" onclick="saveItem()">Save</button><button class="btn alt" onclick="closeModal()">Cancel</button></div>`);
+}
+async function saveItem(){
+  const name=$('#i_name').value.trim();
+  if(!name){alert('Please enter the item name');return}
+  Object.assign(tmp.it,{name,qty:$('#i_qty').value.trim(),note:$('#i_note').value.trim()});
+  if(tmp.isNew)items.push(tmp.it);
+  await saveItems();closeModal();render();
+}
+async function delItem(id){
+  if(!confirm('Delete this item?'))return;
+  items=items.filter(x=>x.id!==id);await saveItems();render();
+}
+
+/* ---------- Occasions / Poojas ---------- */
+function renderOccasions(app){
+  const sorted=[...occasions].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  app.innerHTML=`<div class="crumbs"><a onclick="go('home')">Home</a> › <b>Occasions & Poojas</b></div>
+  <div class="card">
+    <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:10px">
+      <h3 style="margin:0">Occasions (${occasions.length})</h3>
+      <button class="btn sm" onclick="editOccasion(null)">+ Add occasion</button>
+    </div>
+    ${sorted.length?sorted.map(o=>`
+      <div class="listrow">
+        <div class="main" onclick="go('occasion','${o.id}')">
+          <div class="n">${esc(o.name)}</div>
+          <div class="s">${o.date?fmtDate(o.date)+' · ':''}${o.items.length} item${o.items.length===1?'':'s'} in Pooja Saadhanangal</div>
+        </div>
+        <button class="iconbtn" onclick="delOccasion('${o.id}')" title="Delete">✕</button>
+      </div>`).join(''):'<div class="empty">Add an occasion — e.g. a pooja, function or ceremony — and list the items required for it.</div>'}
+  </div>`;
+}
+function editOccasion(id){
+  const o=id?occasions.find(x=>x.id===id):{id:newId('oc'),name:'',date:'',notes:'',items:[]};
+  tmp={isNew:!id,o};
+  openModal(`<h3>${id?'Edit':'Add'} occasion</h3>
+  <label>Occasion name</label><input id="o_name" placeholder="e.g. Ganapathi Homam" value="${esc(o.name)}">
+  <label>Date</label><input type="date" id="o_date" value="${esc(o.date)}">
+  <label>Notes</label><textarea id="o_notes">${esc(o.notes)}</textarea>
+  <div class="row" style="margin-top:16px"><button class="btn" onclick="saveOccasion()">Save</button><button class="btn alt" onclick="closeModal()">Cancel</button></div>`);
+}
+async function saveOccasion(){
+  const name=$('#o_name').value.trim();
+  if(!name){alert('Please enter the occasion name');return}
+  Object.assign(tmp.o,{name,date:$('#o_date').value,notes:$('#o_notes').value.trim()});
+  if(tmp.isNew)occasions.push(tmp.o);
+  await saveOccasions();closeModal();go('occasion',tmp.o.id);
+}
+async function delOccasion(id){
+  if(!confirm('Delete this occasion and its item list?'))return;
+  occasions=occasions.filter(x=>x.id!==id);await saveOccasions();render();
+}
+function renderOccasion(app){
+  const o=occasions.find(x=>x.id===view.id); if(!o){go('occasions');return}
+  $('#hTitle').textContent=o.name;
+  app.innerHTML=`<div class="crumbs"><a onclick="go('home')">Home</a> › <a onclick="go('occasions')">Occasions & Poojas</a> › <b>${esc(o.name)}</b></div>
+  <div class="card">
+    <h2 style="margin:0 0 4px;color:var(--brand)">${esc(o.name)}</h2>
+    <div class="addr">${o.date?fmtDate(o.date):'No date set'}</div>
+    ${o.notes?`<div class="desc">${esc(o.notes)}</div>`:''}
+    <div class="row" style="margin-top:12px">
+      <button class="btn alt sm" onclick="editOccasion('${o.id}')">Edit occasion</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:10px">
+      <h3 style="margin:0">Pooja Saadhanangal (${o.items.length})</h3>
+      <button class="btn sm" onclick="editOccItem('${o.id}',null)">+ Add item</button>
+    </div>
+    ${o.items.length?o.items.map(it=>`
+      <div class="listrow">
+        <div class="main" onclick="editOccItem('${o.id}','${it.id}')">
+          <div class="n">${esc(it.name)}</div>
+          <div class="s">${it.qty?esc(it.qty):''}</div>
+        </div>
+        <button class="iconbtn" onclick="delOccItem('${o.id}','${it.id}')" title="Delete">✕</button>
+      </div>`).join(''):'<div class="empty">List the items required for this pooja — the "Pooja Saadhanangal".</div>'}
+    ${o.items.length?`<div class="row" style="margin-top:12px"><button class="btn teal sm" onclick="printOccasion('${o.id}')">🖨 Print Pooja Saadhanangal</button></div>`:''}
+  </div>`;
+}
+function editOccItem(ocId,itId){
+  const o=occasions.find(x=>x.id===ocId);
+  const it=itId?o.items.find(x=>x.id===itId):{id:newId('oi'),name:'',qty:''};
+  tmp={isNew:!itId,it,o};
+  openModal(`<h3>${itId?'Edit':'Add'} item</h3>
+  <label>Item name</label><input id="oi_name" value="${esc(it.name)}">
+  <label>Quantity</label><input id="oi_qty" placeholder="e.g. 1 kg, 5 nos" value="${esc(it.qty)}">
+  <div class="row" style="margin-top:16px"><button class="btn" onclick="saveOccItem()">Save</button><button class="btn alt" onclick="closeModal()">Cancel</button></div>`);
+}
+async function saveOccItem(){
+  const name=$('#oi_name').value.trim();
+  if(!name){alert('Please enter the item name');return}
+  Object.assign(tmp.it,{name,qty:$('#oi_qty').value.trim()});
+  if(tmp.isNew)tmp.o.items.push(tmp.it);
+  await saveOccasions();closeModal();render();
+}
+async function delOccItem(ocId,itId){
+  const o=occasions.find(x=>x.id===ocId);
+  if(!confirm('Delete this item?'))return;
+  o.items=o.items.filter(x=>x.id!==itId);await saveOccasions();render();
+}
+
+/* ---------- Committee / Office Bearers ---------- */
+const COMMITTEE_ROLES=[['president','President'],['vicePresident','Vice President'],['secretary','Secretary'],['jointSecretary','Joint Secretary'],['treasurer','Treasurer']];
+function renderCommittee(app){
+  const c=committee;
+  app.innerHTML=`<div class="crumbs"><a onclick="go('home')">Home</a> › <b>Committee</b></div>
+  <div class="card">
+    <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:10px">
+      <h3 style="margin:0">Office Bearers</h3>
+      <button class="btn alt sm" onclick="editCommitteeRoles()">Edit</button>
+    </div>
+    <div class="dl">
+      ${COMMITTEE_ROLES.map(([k,label])=>`<b>${label}</b><span>${esc(c[k])||'—'}</span>`).join('')}
+    </div>
+  </div>
+  <div class="card">
+    <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:10px">
+      <h3 style="margin:0">Committee Members (${c.members.length})</h3>
+      <button class="btn sm" onclick="editCommitteeMember(null)">+ Add member</button>
+    </div>
+    ${c.members.length?c.members.map(m=>`
+      <div class="listrow">
+        <div class="main" onclick="editCommitteeMember('${m.id}')">
+          <div class="n">${esc(m.name)}</div>
+          <div class="s">${esc(m.role)||'Committee Member'}</div>
+        </div>
+        <button class="iconbtn" onclick="delCommitteeMember('${m.id}')" title="Delete">✕</button>
+      </div>`).join(''):'<div class="empty">Add the committee members\' names here.</div>'}
+    <div class="row" style="margin-top:12px"><button class="btn teal sm" onclick="printCommittee()">🖨 Print committee list</button></div>
+  </div>`;
+}
+function editCommitteeRoles(){
+  tmp={};
+  openModal(`<h3>Edit Office Bearers</h3>
+  ${COMMITTEE_ROLES.map(([k,label])=>`<label>${label}</label><input id="cr_${k}" value="${esc(committee[k])}">`).join('')}
+  <div class="row" style="margin-top:16px"><button class="btn" onclick="saveCommitteeRoles()">Save</button><button class="btn alt" onclick="closeModal()">Cancel</button></div>`);
+}
+async function saveCommitteeRoles(){
+  COMMITTEE_ROLES.forEach(([k])=>{committee[k]=$(`#cr_${k}`).value.trim();});
+  await saveCommittee();closeModal();render();
+}
+function editCommitteeMember(id){
+  const m=id?committee.members.find(x=>x.id===id):{id:newId('cm'),name:'',role:''};
+  tmp={isNew:!id,m};
+  openModal(`<h3>${id?'Edit':'Add'} committee member</h3>
+  <label>Name</label><input id="cm_name" value="${esc(m.name)}">
+  <label>Designation (optional)</label><input id="cm_role" placeholder="e.g. Committee Member, Auditor" value="${esc(m.role)}">
+  <div class="row" style="margin-top:16px"><button class="btn" onclick="saveCommitteeMember()">Save</button><button class="btn alt" onclick="closeModal()">Cancel</button></div>`);
+}
+async function saveCommitteeMember(){
+  const name=$('#cm_name').value.trim();
+  if(!name){alert('Please enter the name');return}
+  Object.assign(tmp.m,{name,role:$('#cm_role').value.trim()});
+  if(tmp.isNew)committee.members.push(tmp.m);
+  await saveCommittee();closeModal();render();
+}
+async function delCommitteeMember(id){
+  if(!confirm('Remove this committee member?'))return;
+  committee.members=committee.members.filter(x=>x.id!==id);await saveCommittee();render();
+}
+function printCommittee(){
+  const c=committee;
+  const roleRows=COMMITTEE_ROLES.filter(([k])=>c[k]).map(([k,label])=>`<tr><td>${label}</td><td>${esc(c[k])}</td></tr>`).join('');
+  const memberRows=c.members.map((m,i)=>`<tr><td>${i+1}</td><td>${esc(m.name)}</td><td>${esc(m.role)||'Committee Member'}</td></tr>`).join('');
+  printHTML('Committee', reportHead('Committee')+
+    (roleRows?`<h2>Office Bearers</h2><table><thead><tr><th style="width:35%">Designation</th><th>Name</th></tr></thead><tbody>${roleRows}</tbody></table>`:'')+
+    (memberRows?`<h2>Committee Members</h2><table><thead><tr><th style="width:10%">#</th><th style="width:45%">Name</th><th>Designation</th></tr></thead><tbody>${memberRows}</tbody></table>`:''));
+}
+
+/* ---------- modals ---------- */
+function openModal(html){$('#sheet').innerHTML=html;$('#modal').classList.add('on')}
+function closeModal(){$('#modal').classList.remove('on')}
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+$('#backBtn').onclick=()=>{
+  if(view.type==='person'){const p=byId(view.id);if(p&&!p.founder&&p.parent){go('person',p.parent);return}go('home');return}
+  if(view.type==='occasion'){go('occasions');return}
+  go('home');
+};
+
+let tmp={};
+function editTrust(){
+  tmp={logo:trust.logo,deed:trust.deed};
+  openModal(`<h3>Trust details</h3>
+  <label>Trust name</label><input id="t_name" value="${esc(trust.name)}">
+  <label>Address</label><textarea id="t_addr">${esc(trust.address)}</textarea>
+  <label>Short description (from the trust deed)</label><textarea id="t_desc" style="min-height:130px">${esc(trust.description)}</textarea>
+  <label>Trust logo</label>
+  <div class="photoedit"><span id="t_logoprev">${trust.logo?`<img src="${trust.logo}" style="width:70px;height:70px;border-radius:50%;object-fit:cover">`:''}</span><input type="file" accept="image/*" id="t_logo"></div>
+  <label>Trust deed (PDF or image)</label>
+  <div id="t_deedname" class="note">${trust.deed?esc(trust.deed.name):'No file uploaded'}</div>
+  <input type="file" accept="application/pdf,image/*" id="t_deed">
+  <div class="row" style="margin-top:16px"><button class="btn" onclick="saveTrustForm()">Save</button><button class="btn alt" onclick="closeModal()">Cancel</button></div>`);
+  $('#t_logo').onchange=async e=>{if(e.target.files[0]){tmp.logo=await readImage(e.target.files[0],320);$('#t_logoprev').innerHTML=`<img src="${tmp.logo}" style="width:70px;height:70px;border-radius:50%;object-fit:cover">`}};
+  $('#t_deed').onchange=async e=>{if(e.target.files[0]){tmp.deed=await readFile(e.target.files[0]);$('#t_deedname').textContent=tmp.deed.name}};
+}
+async function saveTrustForm(){
+  trust.name=$('#t_name').value.trim()||DEFAULT_TRUST.name;
+  trust.address=$('#t_addr').value.trim();
+  trust.description=$('#t_desc').value.trim();
+  trust.logo=tmp.logo;trust.deed=tmp.deed;
+  await saveTrust();closeModal();render();
+}
+function openDeed(){
+  const d=trust.deed;if(!d)return;
+  const isImg=d.type.startsWith('image/');
+  openModal(`<h3>Trust deed</h3><div class="note">${esc(d.name)}</div>
+  ${isImg?`<img src="${d.data}" style="width:100%;margin-top:10px">`:`<iframe src="${d.data}" style="width:100%;height:65vh;border:1px solid var(--line);margin-top:10px"></iframe>`}
+  <div class="row" style="margin-top:12px"><a class="btn" href="${d.data}" download="${esc(d.name)}" style="text-decoration:none">Download</a><button class="btn alt" onclick="closeModal()">Close</button></div>`);
+}
+
+function editPerson(id,parent){
+  const p=id?byId(id):blank({parent:parent||null});
+  tmp={photo:p.photo,isNew:!id,p};
+  const opt=(arr,v,ph)=>`<option value="">${ph}</option>`+arr.map(x=>`<option ${x===v?'selected':''}>${x}</option>`).join('');
+  openModal(`<h3>${id?'Edit':'Add'} ${p.founder?'founder':'person'}</h3>
+  <label>Full name</label><input id="f_name" value="${esc(p.name)}">
+  <label>Photo</label>
+  <div class="photoedit"><span id="f_prev">${p.photo?`<img src="${p.photo}">`:'<div class="ph">＋</div>'}</span><input type="file" accept="image/*" id="f_photo"></div>
+  <label>Relation</label><input id="f_rel" list="rels" value="${esc(p.relation)}"><datalist id="rels">${RELS.map(r=>`<option value="${r}">`).join('')}</datalist>
+  <div class="two"><div><label>Date of birth</label><input type="date" id="f_dob" value="${esc(p.dob)}"></div>
+  <div><label>Blood group</label><select id="f_blood">${opt(BLOOD,p.blood,'Select')}</select></div></div>
+  <label>Birth star</label><select id="f_star">${opt(STARS,p.star,'Select')}</select>
+  <div class="two"><div><label>Mobile number</label><input type="tel" id="f_mobile" placeholder="e.g. 98470 12345" value="${esc(p.mobile)}"></div>
+  <div><label>Aadhaar number</label><input type="text" id="f_aadhaar" placeholder="1234 5678 9012" maxlength="14" value="${esc(p.aadhaar)}"></div></div>
+  <div class="two"><div><label>Educational qualification</label><input id="f_edu" placeholder="e.g. B.Tech" value="${esc(p.education)}"></div>
+  <div><label>Job / occupation</label><input id="f_job" placeholder="e.g. Teacher" value="${esc(p.job)}"></div></div>
+  <label>Communicative address</label><textarea id="f_addr">${esc(p.address)}</textarea>
+  <div class="two"><div><label>Date of death (if died)</label><input type="date" id="f_dod" value="${esc(p.dod)}"></div>
+  <div id="dstarBox"><label>Death star (if died)</label><select id="f_dstar">${opt(STARS,p.dstar,'Select')}</select></div></div>
+  <div class="row" style="margin-top:16px"><button class="btn" onclick="savePerson()">Save</button><button class="btn alt" onclick="closeModal()">Cancel</button></div>`);
+  $('#f_photo').onchange=async e=>{if(e.target.files[0]){tmp.photo=await readImage(e.target.files[0]);$('#f_prev').innerHTML=`<img src="${tmp.photo}">`}};
+  const tog=()=>{$('#dstarBox').style.opacity=$('#f_dod').value?1:.4};$('#f_dod').onchange=tog;tog();
+}
+async function savePerson(){
+  const p=tmp.p;
+  const name=$('#f_name').value.trim();
+  if(!name){alert('Please enter the name');return}
+  Object.assign(p,{name,photo:tmp.photo||'',relation:$('#f_rel').value.trim(),dob:$('#f_dob').value,blood:$('#f_blood').value,star:$('#f_star').value,mobile:$('#f_mobile').value.trim(),aadhaar:$('#f_aadhaar').value.trim(),education:$('#f_edu').value.trim(),job:$('#f_job').value.trim(),address:$('#f_addr').value.trim(),dod:$('#f_dod').value,dstar:$('#f_dod').value?$('#f_dstar').value:''});
+  if(tmp.isNew)persons.push(p);
+  await savePersons();closeModal();render();
+}
+async function delPerson(id){
+  const all=[id];let i=0;while(i<all.length){persons.filter(x=>x.parent===all[i]).forEach(x=>all.push(x.id));i++}
+  const extra=all.length-1;
+  if(!confirm(`Delete ${byId(id).name}${extra?` and ${extra} family member(s) under them`:''}? This cannot be undone.`))return;
+  const par=byId(id).parent;
+  persons=persons.filter(x=>!all.includes(x.id));
+  await savePersons();
+  go(par?'person':'home',par);
+}
+
+/* ---------- Menu ---------- */
+$('#menuBtn').onclick=()=>openModal(`<h3>Menu</h3>
+  <div class="menu-list">
+    <button class="menu-item" onclick="closeModal();openReports()"><span class="ic">🖨</span><span><div class="t">Reports & Printing</div><div class="d">Build a custom report — pick the fields and members you need</div></span></button>
+    <button class="menu-item" onclick="closeModal();go('items')"><span class="ic">📦</span><span><div class="t">Trust-owned Items</div><div class="d">Vessels, land, equipment and other trust property</div></span></button>
+    <button class="menu-item" onclick="closeModal();go('occasions')"><span class="ic">🪔</span><span><div class="t">Occasions & Poojas</div><div class="d">Pooja Saadhanangal — required items per occasion</div></span></button>
+    <button class="menu-item" onclick="closeModal();go('committee')"><span class="ic">🏛</span><span><div class="t">Committee</div><div class="d">President, Secretary, Treasurer and committee members</div></span></button>
+    <button class="menu-item" onclick="closeModal();openInstall()"><span class="ic">📲</span><span><div class="t">Install App</div><div class="d">Add this app to your home screen</div></span></button>
+    <button class="menu-item" onclick="closeModal();openBackup()"><span class="ic">💾</span><span><div class="t">Backup & Restore</div><div class="d">Save or move your data</div></span></button>
+  </div>`);
+
+/* ---------- Reports (printing) ---------- */
+const REPORT_FIELDS=[
+  ['relation','Relation',true],
+  ['mobile','Mobile Number',false],
+  ['address','Communicative Address',true],
+  ['blood','Blood Group',false],
+  ['dob','Date of Birth',false],
+  ['star','Birth Star',false],
+  ['education','Educational Qualification',false],
+  ['job','Job / Occupation',false],
+  ['aadhaar','Aadhaar Number',false],
+  ['dod','Date of Death',false],
+  ['dstar','Death Star',false]
+];
+const REPORT_PRESETS={
+  directory:['relation','address'],
+  birthstars:['relation','dob','star'],
+  death:['relation','dod','dstar'],
+  contact:['relation','mobile','address'],
+  profile:['relation','dob','star','education','job'],
+  full:REPORT_FIELDS.map(f=>f[0])
+};
+function openReports(){
+  openModal(`<h3>Build a Member Report</h3>
+  <p class="note" style="font-size:13px">Tick only the fields you need for this occasion, then print or save as PDF. Name is always included.</p>
+  <label>Report title</label><input id="rp_title" value="Member Report">
+  <label>Who to include</label>
+  <select id="rp_who">
+    <option value="all">All members</option>
+    <option value="living">Living members only</option>
+    <option value="deceased">Deceased members only</option>
+  </select>
+  <label>Quick presets</label>
+  <div class="row">
+    <button type="button" class="btn alt sm" onclick="applyReportPreset('directory')">Directory (name & address)</button>
+    <button type="button" class="btn alt sm" onclick="applyReportPreset('birthstars')">Birth stars</button>
+    <button type="button" class="btn alt sm" onclick="applyReportPreset('death')">Death register</button>
+    <button type="button" class="btn alt sm" onclick="applyReportPreset('contact')">Contact list</button>
+    <button type="button" class="btn alt sm" onclick="applyReportPreset('profile')">Profile (education/job)</button>
+    <button type="button" class="btn alt sm" onclick="applyReportPreset('full')">All fields</button>
+  </div>
+  <label>Columns to include</label>
+  <div class="menu-list" style="gap:4px">
+    ${REPORT_FIELDS.map(([key,label,dflt])=>`<label style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--ink);margin:0;background:#fbf8f1;border:1px solid var(--line);border-radius:8px;padding:8px 10px;cursor:pointer">
+      <input type="checkbox" class="rp_col" value="${key}" style="width:auto" ${dflt?'checked':''}> ${label}
+    </label>`).join('')}
+  </div>
+  <div class="row" style="margin-top:16px"><button class="btn teal" onclick="printCustomReport()">🖨 Generate & Print</button><button class="btn alt" onclick="closeModal()">Cancel</button></div>`);
+}
+function applyReportPreset(name){
+  const keep=REPORT_PRESETS[name]||[];
+  document.querySelectorAll('.rp_col').forEach(cb=>{cb.checked=keep.includes(cb.value)});
+  const titles={directory:'Member Directory',birthstars:'Birth Star List',death:'Death Register',contact:'Contact List',profile:'Member Profile Report',full:'Full Member Report'};
+  if(titles[name])$('#rp_title').value=titles[name];
+  if(name==='death')$('#rp_who').value='deceased';
+}
+const REPORT_FIELD_DEFS={
+  relation:p=>esc(p.relation)||'—',
+  mobile:p=>esc(p.mobile)||'—',
+  address:p=>p.address?esc(p.address).replace(/\n/g,'<br>'):'—',
+  blood:p=>esc(p.blood)||'—',
+  dob:p=>fmtDate(p.dob),
+  star:p=>esc(p.star)||'—',
+  education:p=>esc(p.education)||'—',
+  job:p=>esc(p.job)||'—',
+  aadhaar:p=>esc(p.aadhaar)||'—',
+  dod:p=>fmtDate(p.dod),
+  dstar:p=>esc(p.dstar)||'—'
+};
+function printCustomReport(){
+  const title=$('#rp_title').value.trim()||'Member Report';
+  const who=$('#rp_who').value;
+  const cols=[...document.querySelectorAll('.rp_col:checked')].map(c=>c.value);
+  let list=persons;
+  if(who==='living')list=list.filter(p=>!p.dod);
+  if(who==='deceased')list=list.filter(p=>p.dod);
+  if(!list.length){alert('No members match this selection.');return}
+  const labelOf=k=>(REPORT_FIELDS.find(f=>f[0]===k)||[,k])[1];
+  const head=`<th>Name</th>`+cols.map(c=>`<th>${labelOf(c)}</th>`).join('');
+  const rows=list.map(p=>`<tr><td>${esc(p.name)||'—'}</td>${cols.map(c=>`<td>${REPORT_FIELD_DEFS[c](p)}</td>`).join('')}</tr>`).join('');
+  printHTML(title, reportHead(title)+`<table><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table>`);
+  closeModal();
+}
+function reportHead(title){
+  return `<div class="rhead">
+    ${trust.logo?`<img src="${trust.logo}">`:''}
+    <div><div class="rname">${esc(trust.name)}</div>${trust.address?`<div class="raddr">${esc(trust.address)}</div>`:''}</div>
+  </div>
+  <h1>${esc(title)}</h1>`;
+}
+function printHTML(title,bodyHtml){
+  const w=window.open('','_blank');
+  if(!w){alert('Please allow pop-ups to print.');return}
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${esc(title)}</title>
+  <style>
+  *{box-sizing:border-box}
+  body{font-family:Georgia,'Times New Roman',serif;color:#222;margin:28px;}
+  .rhead{display:flex;align-items:center;gap:14px;border-bottom:2px solid #7a3e1d;padding-bottom:10px;margin-bottom:6px}
+  .rhead img{width:56px;height:56px;border-radius:50%;object-fit:cover}
+  .rname{font-weight:bold;font-size:16px;letter-spacing:.3px}
+  .raddr{font-size:12px;color:#555}
+  h1{font-size:18px;margin:14px 0 12px;text-align:center;text-transform:uppercase;letter-spacing:.5px}
+  h2{font-size:14px;margin:16px 0 6px;color:#7a3e1d}
+  table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:14px}
+  th,td{border:1px solid #999;padding:6px 8px;text-align:left;vertical-align:top}
+  th{background:#f0e9db}
+  .meta{font-size:12px;color:#555;margin-bottom:10px}
+  .foot{margin-top:26px;font-size:11px;color:#777;text-align:right}
+  @media print{ body{margin:12mm} }
+  </style></head><body>${bodyHtml}
+  <div class="foot">Printed ${new Date().toLocaleString('en-IN')}</div>
+  </body></html>`);
+  w.document.close();
+  w.onload=()=>{w.focus();w.print();};
+  setTimeout(()=>{try{w.focus();w.print();}catch(e){}},350);
+}
+function printItems(){
+  const rows=items.map(it=>`<tr><td>${esc(it.name)}</td><td>${esc(it.qty)||'—'}</td><td>${esc(it.note)||'—'}</td></tr>`).join('');
+  printHTML('Trust-owned Items', reportHead('Trust-owned Items')+
+    `<table><thead><tr><th style="width:28%">Item</th><th style="width:20%">Quantity / Description</th><th>Notes</th></tr></thead><tbody>${rows}</tbody></table>`);
+}
+function printOccasion(id){
+  const o=occasions.find(x=>x.id===id); if(!o)return;
+  const rows=o.items.map((it,i)=>`<tr><td>${i+1}</td><td>${esc(it.name)}</td><td>${esc(it.qty)||'—'}</td></tr>`).join('');
+  const meta=`<div class="meta">${o.date?fmtDate(o.date):''}${o.notes?' · '+esc(o.notes):''}</div>`;
+  printHTML('Pooja Saadhanangal', reportHead(esc(o.name))+meta+
+    `<h2>Pooja Saadhanangal</h2>
+    <table><thead><tr><th style="width:10%">#</th><th style="width:55%">Item</th><th>Quantity</th></tr></thead><tbody>${rows}</tbody></table>`);
+}
+
+/* ---------- Backup ---------- */
+function openBackup(){openModal(`<h3>Backup & restore</h3>
+  <p class="note" style="font-size:13px">All data is stored only in this browser/app on this device. Download a backup regularly (and to move the data to another phone or computer).</p>
+  <div class="row"><button class="btn" onclick="exportData()">Download backup</button></div>
+  <label>Restore from a backup file</label><input type="file" accept=".json" id="imp">
+  <div class="row" style="margin-top:16px"><button class="btn alt" onclick="closeModal()">Close</button></div>`);
+}
+document.addEventListener('change',async e=>{
+  if(e.target.id!=='imp'||!e.target.files[0])return;
+  try{
+    const j=JSON.parse(await e.target.files[0].text());
+    if(!j.trust||!j.persons)throw 0;
+    if(!confirm('This will replace all data currently in the app. Continue?'))return;
+    trust={...DEFAULT_TRUST,...j.trust};persons=j.persons;items=j.items||[];occasions=j.occasions||[];
+    committee={president:'',vicePresident:'',secretary:'',jointSecretary:'',treasurer:'',members:[],...(j.committee||{})};
+    await saveTrust();await savePersons();await saveItems();await saveOccasions();await saveCommittee();closeModal();go('home');
+  }catch{alert('This file is not a valid backup.')}
+});
+function exportData(){
+  const b=new Blob([JSON.stringify({trust,persons,items,occasions,committee,saved:new Date().toISOString()})],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='trust-family-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();
+}
+
+/* ---------- Install App (PWA) ---------- */
+let deferredInstallPrompt=null;
+window.addEventListener('beforeinstallprompt',(e)=>{e.preventDefault();deferredInstallPrompt=e;});
+function isStandalone(){return window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true}
+function isIOS(){return /iphone|ipad|ipod/i.test(navigator.userAgent)}
+function openInstall(){
+  if(isStandalone()){
+    openModal(`<h3>Install App</h3><div class="install-card"><span class="badge-ok">✓ Already installed</span><p>This app is already installed and running as an app on this device.</p></div>
+    <div class="row" style="margin-top:16px"><button class="btn alt" onclick="closeModal()">Close</button></div>`);
+    return;
+  }
+  if(isIOS()){
+    openModal(`<h3>Install App</h3>
+    <div class="install-card">
+      <h4>Add to Home Screen (iPhone/iPad)</h4>
+      <p>iOS doesn't support a one-tap install button, but adding this app takes a few seconds:</p>
+      <div class="dl" style="color:#fff">
+        <b style="color:#fff">1.</b><span>Tap the <b>Share</b> icon (square with an arrow) in Safari's toolbar</span>
+        <b style="color:#fff">2.</b><span>Scroll down and tap <b>"Add to Home Screen"</b></span>
+        <b style="color:#fff">3.</b><span>Tap <b>Add</b> — the app icon will appear on your home screen</span>
+      </div>
+    </div>
+    <p class="note">Must be opened in Safari (not Chrome) for this option to appear on iOS.</p>
+    <div class="row" style="margin-top:16px"><button class="btn alt" onclick="closeModal()">Close</button></div>`);
+    return;
+  }
+  openModal(`<h3>Install App</h3>
+  <div class="install-card">
+    <h4>Install on this device</h4>
+    <p>Installs the app icon on your home screen / app list. It will open full-screen and work offline, just like a native app — no browser address bar.</p>
+    <button class="btn" id="doInstallBtn" onclick="doInstall()">${deferredInstallPrompt?'Install now':'Install (open menu ⋮ → Install app)'}</button>
+  </div>
+  <p class="note">${deferredInstallPrompt?'Tap Install, then confirm in the dialog that appears.':"If the button doesn't install directly, use your browser's menu (⋮ or •••) and choose \"Install app\" or \"Add to Home screen\"."}</p>
+  <div class="row" style="margin-top:16px"><button class="btn alt" onclick="closeModal()">Close</button></div>`);
+}
+async function doInstall(){
+  if(!deferredInstallPrompt){return}
+  deferredInstallPrompt.prompt();
+  const choice=await deferredInstallPrompt.userChoice;
+  deferredInstallPrompt=null;
+  closeModal();
+}
+window.addEventListener('appinstalled',()=>{deferredInstallPrompt=null;});
+
+/* ---------- service worker ---------- */
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}
+
+load();
+</script>
+</body>
+</html>
